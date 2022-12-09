@@ -5,3 +5,7 @@
 .link {
   text-decoration: none;
 }
+
+.nav {
+  border: 1px solid red;
+}

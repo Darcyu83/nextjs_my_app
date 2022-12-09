@@ -5,7 +5,6 @@ export default function About() {
   useEffect(() => {});
   return (
     <div>
-      <NavBar />
       <p>About</p>
     </div>
   );
