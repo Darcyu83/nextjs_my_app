@@ -1,7 +1,5 @@
 /** @type {import('next').NextConfig} */
 
-const API_KEY = process.env.API_KEY;
-
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
@@ -9,6 +7,7 @@ const nextConfig = {
     domains: ["image.tmdb.org"], // poster image path
   },
 
+  // 리디렉트
   async redirects() {
     return [
       {
@@ -18,11 +17,18 @@ const nextConfig = {
       },
     ];
   },
+
+  // alias
   async rewrites() {
     return [
       {
-        source: "/api/movies",
-        destination: `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`,
+        source: "/api/movies_popular",
+        destination: `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY}`,
+      },
+
+      {
+        source: "/api/movies_popular/:id",
+        destination: `https://api.themoviedb.org/3/movie/:id?api_key=${process.env.API_KEY}`,
       },
     ];
   },

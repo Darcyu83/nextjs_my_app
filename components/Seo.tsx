@@ -1,9 +1,10 @@
 import Head from "next/head";
+import { ReactNode } from "react";
 
-export default function Seo({ pageNm }: { pageNm: string }) {
+export default function Seo({ pageNm }: { pageNm: ReactNode }) {
   return (
     <Head>
-      <title>{pageNm} | NextJs</title>
+      <title>{`${pageNm} | NextJs`}</title>
     </Head>
   );
 }

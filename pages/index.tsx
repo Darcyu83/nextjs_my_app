@@ -1,15 +1,18 @@
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import NavBar from "../components/Navbar";
 import Seo from "../components/Seo";
+import { API_MOVIE_POPULAR, URL_POSTER_PREFIX } from "./api/constants";
+import { getPopularMovies } from "./api/movieApi";
 
 // move to next.config.js
 // const url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`;
-const posterUrl = `https://image.tmdb.org/t/p/w500/`;
 
 //Server Side fetching data
-export default function Home({ results }: any) {
+export default function Home({ movies }: any) {
   //** Client side fetching data */
 
   // const [movies, setMovies] = useState<[] | null>(null);
@@ -23,22 +26,50 @@ export default function Home({ results }: any) {
   //   })();
   // }, []);
 
+  const router = useRouter();
+
+  const onClick = (id: string, title: string) => {
+    router.push(`/movies/${title}/${id}`);
+    // router.push(
+    //   { pathname: `/movies/${id}`, query: { id, title } },
+    //   `/movies/${id}`
+    // );
+  };
+
   return (
     <div>
       <Seo pageNm="Home" />
       <p className="active">Home</p>
       {/* 1. Server Side : results */}
-      {results.map((movie: any) => (
+
+      {movies.map((movie: any) => (
         // 2. Client Side : movies
         // {movies?.map((movie: any) => (
-        <div key={`movie_List_${movie.title}`} className="box card">
+
+        <div
+          key={`movie_List_${movie.id}`}
+          className="box card"
+          onClick={() => onClick(movie.id, movie.original_title)}
+        >
           <Image
             className="poster"
-            src={`${posterUrl}${movie.poster_path}`}
+            src={`${URL_POSTER_PREFIX}${movie.poster_path}`}
             alt={`${movie.title}`}
             fill
+            sizes="(max-width: 768px) 50vw, 
+                   (max-width: 1200px) 25vw,
+                   25vw"
           />
-          <p className="title">{movie.title}</p>
+          <Link
+            href={`/movies/${movie.origianl_title}/${movie.id}`}
+            // href={{
+            //   pathname: `/movies/${movie.id}`,
+            //   query: { id: movie.id, title: movie.original_title },
+            // }}
+            // as={`/movies/${movie.id}`}
+          >
+            <p className="title">{movie.title}</p>
+          </Link>
         </div>
       ))}
 
@@ -107,18 +138,12 @@ export default function Home({ results }: any) {
 // Server Side fetching data
 // run on server merely
 export async function getServerSideProps() {
-  // absolue url 필요함
-
-  const response = await fetch(
-    `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY}`
-  );
-  // const response = await fetch(`http://localhost:3000/api/movies`);
-
-  const { results } = await response.json();
+  const response = await fetch(`http://localhost:3000${API_MOVIE_POPULAR}`);
+  const { results: movies } = await response.json();
 
   return {
     props: {
-      results,
+      movies,
     },
   };
 }

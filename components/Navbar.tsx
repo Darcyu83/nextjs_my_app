@@ -7,9 +7,6 @@ import vercelPath from "../public/vercel.svg";
 export default function NavBar() {
   const router = useRouter();
 
-  console.log(
-    [router.pathname === "/about" ? styles.active : undefined].join(" ")
-  );
   return (
     <nav>
       {/* <img src="./vercel.svg" alt="log" /> */}
